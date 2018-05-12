@@ -38,6 +38,9 @@ $f3->copy('POST','FORM.contact');
 
 ### markdown
 
+Convert inline markdown text or render a file.
+
+
 ```html
 <markdown>
 # Headline
@@ -60,6 +63,8 @@ Init:
 
 
 ### image
+
+Render image thumbnails automatically.
 
 Init:
 
@@ -89,5 +94,10 @@ Additional attributes:
 *  `enlarge`, size up image when source image is smaller than target size
 *  `quality`, overwrite default quality
 
+
+
+## Licence
+
+GPLv3
 
 
