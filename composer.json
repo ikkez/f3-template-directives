@@ -1,0 +1,10 @@
+{
+    "name": "ikkez/f3-template-directives",
+    "description": "Collection of template directives for PHP Fat-Free Framework",
+    "keywords": ["F3","fatfree","template","form","image"],
+    "homepage": "https://github.com/ikkez/f3-template-directives",
+    "license": "GPL-3.0",
+    "autoload": {
+		"classmap": ["src/"]
+    }
+}
