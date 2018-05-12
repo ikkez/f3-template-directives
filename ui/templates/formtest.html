@@ -1,0 +1,364 @@
+<html>
+<head>
+    <title>F3 FooForms</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="ui/css/prism.css">
+    <style>
+        body {
+            font-family: Verdana;
+            font-size: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 30px;
+            padding-bottom: 50px;
+        }
+        input.error {
+            box-shadow: 0 0 1px 2px rgba(255,0,0,0.4);
+        }
+        div.error {
+            padding: 5px;
+            width: 250px;
+            margin-bottom: 20px;
+            border: 1px solid red;
+        }
+        div.info {
+            padding: 5px;
+            width: 250px;
+            margin-bottom: 20px;
+            border: 1px solid limegreen;
+        }
+        .form-group {
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background-color: #eeeeee;
+            padding: 10px;
+        }
+        .form-group > label,
+        .form-group > p {
+            font-weight: bold;
+        }
+        .green {
+            border: 1px solid lightgreen;
+        }
+        input, select, textarea {
+            padding: 3px;
+            margin-bottom: 10px;
+        }
+        p {
+            margin-top: 0;
+        }
+        .panel .btn {
+            margin-left: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="well">
+
+<markdown>
+
+# Form Directives <small>for Fat-Free Framework</small>
+
+This is a collection of additional form-related HTML tag handlers for easy creating and working with input elements.
+
+It offers server side data handling to **form / input / select / textarea** elements and handles the posted values of those elements and decides whether to check / select the element or not - all without the need to write additional inline conditions.
+
+This is useful for quick and easy form integration, especially for bigger forms, so you don't have to bother with putting all values back into the form elements, when loading an existing or submitted form.
+
+To enable all form tag handlers just call:
+
+<pre class="language-php"><code>\Template\Tags\Form::initAll();</code></pre>
+[download form-directives from github](https://github.com/ikkez/f3-template-directives)
+
+</markdown>
+
+    </div>
+        <F3:check if="{{ @VERB == 'POST' }}">
+        <div class="info">The form was send</div>
+    </F3:check>
+    <form name="contact" action="fooforms" method="post">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Inputs</h3>
+            </div>
+            <div class="panel-body">
+                <p>Inputs are automatically filled with the submitted value upon post</p>
+
+                <div class="form-group">
+                    <label>simple input field</label>
+                    <input type="text" name="input1" class="form-control" placeholder="Tell me something" />
+                    markup:
+                    <pre class="language-markup"><code>&lt;input type="text" name="input1" /&gt;</code></pre>
+                </div>
+
+                <div class="form-group">
+                    <label>input field with value attribute overwrite</label>
+                    <input type="text" name="input2" value="{{isset(@POST.input2)?@POST.input2:'abc123'}}" class="form-control" />
+                    markup:
+                    <F3:ignore><pre class="language-markup"><code>&lt;input type="text" name="input2" value="{{isset(@POST.input2)?@POST.input2:'abc123'}}" /&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>input field with dynamic passive attribute</label>
+                    <F3:set nice="nice" />
+                    <input type="text" name="input3" class="form-control {{ @nice }}"  />
+                    markup:
+                    <F3:ignore><pre class="language-markup"><code>&lt;input type="text" name="input3" class="form-control {{ @nice }}" /&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>input field with dynamic active attribute</label>
+                    <F3:set name="input4" />
+                    <input type="text" name="{{ @name }}" class="form-control" />
+                    markup:
+                    <F3:ignore><pre class="language-markup"><code>&lt;input type="text" name="{{ @name }}" /&gt;</code></pre></F3:ignore>
+                </div>
+
+
+            </div>
+            <input type="submit" value="submit" class="btn btn-primary" />
+
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Textarea</h3>
+            </div>
+            <div class="panel-body">
+                <p>Also Textarea is automatically filled with the submitted value.</p>
+
+                <div class="form-group">
+                    <label>simple textarea</label>
+                    <textarea class="form-control" name="description"></textarea>
+                </div>
+
+            </div>
+            <input type="submit" value="submit" class="btn btn-primary" />
+
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Checkboxes</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <p>a simple checkbox</p>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="check1" /> i am checkable</label>
+                    </div>
+                    markup:
+                    <F3:ignore><pre class="language-markup"><code>&lt;input type="checkbox" name="check1" /&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <p>a list of checkboxes created by an array</p>
+                    <F3:repeat group="{{ @colors }}" value="{{ @color }}">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="days-{{ @color }}"/> {{ @color }}</label>
+                    </div>
+                    </F3:repeat>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;F3:repeat group="{{ @colors }}" value="{{ @color }}"&gt;
+    &lt;label&gt;&lt;input type="checkbox" name="days-{{ @color }}"/&gt; {{ @color }}&lt;/label&gt;
+&lt;/F3:repeat&gt;</code></pre></F3:ignore>
+                    
+                </div>
+
+                <div class="form-group">
+                    <p>a list of checkboxes with array name</p>
+                    <F3:repeat group="{{ @days }}" key="{{@key}}" value="{{ @day }}">
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="days[]" value="{{ @key }}"/> {{ @day }}</label>
+                    </div>
+                    </F3:repeat>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;F3:repeat group="{{ @days }}" key="@key" value="{{ @day }}"&gt;
+    &lt;label&gt;&lt;input type="checkbox" name="days[]" value="{{ @key }}"/&gt; {{ @day }}&lt;/label&gt;
+&lt;/F3:repeat&gt;</code></pre></F3:ignore>
+                </div>
+
+            </div>
+            <input type="submit" value="submit" class="btn btn-primary" />
+
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Radios</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <p>a list of radio buttons created by an array</p>
+                    <F3:repeat group="{{ @days }}" key="@key" value="{{ @day }}">
+                    <div class="radio">
+                        <label><input type="radio" name="radiodays" value="{{ @key }}"/> {{ @day }}</label>
+                    </div>
+                    </F3:repeat>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;F3:repeat group="{{ @days }}" key="@key" value="{{ @day }}"&gt;
+    &lt;label&gt;&lt;input type="radio" name="radiodays" value="{{ @key }}"/&gt; {{ @day }}&lt;/label&gt;
+&lt;/F3:repeat></code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <p>a list of radio buttons with complex array key</p>
+                    <F3:repeat group="{{ @days }}" key="@key" value="{{ @day }}">
+                        <div class="radio">
+                            <label><input type="radio" name="radiodays4[key][]" value="{{ @key }}"/> {{ @day }}</label>
+                        </div>
+                    </F3:repeat>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;F3:repeat group=&quot;{{ @days }}&quot; key=&quot;@key&quot; value=&quot;{{ @day }}&quot;&gt;
+    &lt;div class=&quot;radio&quot;&gt;
+        &lt;label&gt;&lt;input type=&quot;radio&quot; name=&quot;radiodays4[key][]&quot; value=&quot;{{ @key }}&quot;/&gt; {{ @day }}&lt;/label&gt;
+    &lt;/div&gt;
+&lt;/F3:repeat&gt;</code></pre></F3:ignore>
+                </div>
+
+            </div>
+            <input type="submit" value="submit" class="btn btn-primary" />
+
+        </div>
+
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Selects</h3>
+            </div>
+            <div class="panel-body">
+
+                <p>Select field and their options can be created and automatically checked using a single given array</p>
+
+                <div class="form-group">
+                    <label>Select field with simple options</label>
+                    <select class="form-control" name="fruits1">
+                        <option value="banana">banana</option>
+                        <option value="cherry">cherry</option>
+                        <option value="peach">peach</option>
+                    </select>
+                    markup:
+                    <F3:ignore>
+                        <pre class="language-markup">
+<code>&lt;select class=&quot;form-control&quot; name=&quot;fruits1&quot;&gt;
+    &lt;option value=&quot;banana&quot;&gt;banana&lt;/option&gt;
+    &lt;option value=&quot;cherry&quot;&gt;cherry&lt;/option&gt;
+    &lt;option value=&quot;peach&quot;&gt;peach&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+                    </F3:ignore>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Select field dynamic name</label>
+                    <F3:set fruits2="season" />
+                    <select class="form-control" name="fruits2[{{ @fruits2 }}]">
+                        <option value="pineapple">pineapple</option>
+                        <option value="cherry">cherry</option>
+                        <option value="orange">orange</option>
+                    </select>
+                    markup:
+                    <F3:ignore>
+                        <pre class="language-markup">
+<code>&lt;select class=&quot;form-control&quot; name=&quot;fruits2[{{ @fruits2 }}]&quot;&gt;
+    &lt;option value=&quot;pineapple&quot;&gt;pineapple&lt;/option&gt;
+    &lt;option value=&quot;cherry&quot;&gt;cherry&lt;/option&gt;
+    &lt;option value=&quot;orange&quot;&gt;orange&lt;/option&gt;
+&lt;/select&gt;</code></pre>
+                    </F3:ignore>
+                </div>
+
+
+                <div class="form-group">
+                    <label>Select field with simple repeat block</label>
+                    <select class="form-control" name="days2">
+                        <F3:repeat group="{{ @days }}" key="{{@key}}" value="{{ @label }}">
+                            <option value="{{@key}}">{{ @label }}</option>
+                        </F3:repeat>
+                    </select>
+                    markup:
+                    <F3:ignore>
+                        <pre class="language-markup">
+<code>&lt;select class=&quot;form-control&quot; name=&quot;days2&quot;&gt;
+    &lt;F3:repeat group=&quot;{{ @days }}&quot; key=&quot;{{@key}}&quot; value=&quot;{{ @label }}&quot;&gt;
+        &lt;option value=&quot;{{@key}}&quot;&gt;{{ @label }}&lt;/option&gt;
+    &lt;/F3:repeat&gt;
+&lt;/select&gt;</code></pre>
+                    </F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>Select field build-by "group" attribute</label>
+                    <pre class="language-php"><code>$f3-&gt;set('fruits', array(
+    'apple',
+    'banana',
+    'peach',
+));</code></pre>
+                    <select class="form-control" name="fruits" group="{{ @fruits }}"></select>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;select class="form-control" name="fruits" group="{{ @fruits }}"&gt;&lt;/select&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>Select field with additional option elements</label>
+                    <pre class="language-php"><code>$f3-&gt;set('colors', array(
+    '#f00'=&gt;'red',
+    '#0f0'=&gt;'green',
+    '#00f'=&gt;'blue',
+));</code></pre>
+                    <select class="form-control" name="colors" group="{{ @colors }}" style="{{isset(@POST.colors)?'border:1px solid '.@POST.colors:'border:1px solid grey'}}">
+                        <option value="">please select your color</option>
+                    </select>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;select class="form-control" name="colors" group="{{ @colors }}" style="{{isset(@POST.colors)?'border:1px solid '.@POST.colors:'border:1px solid grey'}}"&gt;
+    &lt;option value=""&gt;please select your color&lt;/option&gt;
+&lt;/select&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>Select field with dynamic passive attribute</label>
+                    <F3:set green="green" />
+                    <select class="form-control {{ @green }}" name="select3" group="{{ @fruits }}"></select>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;select class="form-control {{ @green }}" name="select3" group="{{ @fruits }}"&gt;&lt;/select&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>Select field with dynamic active attribute</label>
+                    <F3:set select4="fruits4" />
+                    <select class="form-control" name="{{ @select4 }}" group="{{ @fruits }}"></select>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;select class="form-control" name="{{ @select4 }}" group="{{ @fruits }}"&gt;&lt;/select&gt;</code></pre></F3:ignore>
+                </div>
+
+                <div class="form-group">
+                    <label>Select field with complex dynamic array key</label>
+                    <F3:set select5="fruits5" />
+                    <select class="form-control" name="select5[{{ @select5 }}][]" group="{{ @fruits }}"></select>
+                    markup:
+                    <F3:ignore><pre class="language-markup">
+<code>&lt;select class="form-control" name="select5[{{ @select5 }}][]" group="{{ @fruits }}"&gt;&lt;/select&gt;</code></pre></F3:ignore>
+                </div>
+
+            </div>
+            <input type="submit" value="submit" class="btn btn-primary" />
+        </div>
+    </form>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="ui/js/prism.js"></script>
+    </body>
+</html>

@@ -1,0 +1,3 @@
+[submodule "f3-template-directives"]
+	path = f3-template-directives
+	url = ../f3-template-directives
