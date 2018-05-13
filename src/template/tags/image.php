@@ -33,7 +33,6 @@ class Image extends \Template\TagHandler {
 	 */
 	function __construct($options=[]) {
 		$this->setOptions($options);
-		var_dump($this->options);
 		parent::__construct();
 	}
 
@@ -103,18 +102,18 @@ class Image extends \Template\TagHandler {
 			$ext='bmp';
 		$new_file_name = $hash.'.'.$ext;
 		$dst_path = $this->options['temp_dir'];
-		$path = explode('/', $path);
-		$file = array_pop($path);
-		$src_path = implode('/',$path).'/';
-		if (!is_dir($dst_path))
-			mkdir($dst_path,0775,true);
 		if (!file_exists($dst_path.$new_file_name)) {
+			$path = explode('/', $path);
+			$file = array_pop($path);
+			$src_path = implode('/',$path).'/';
 			if (file_exists($src_path.$file))
 				$imgObj = new \Image($file, false, $src_path);
 			elseif ($this->options['not_found_fallback'])
 				$imgObj = new \Image($this->options['not_found_fallback'], false);
 			else
 				return 'http://placehold.it/250x250?text=Not+Found';
+			if (!is_dir($dst_path))
+				mkdir($dst_path,0775,true);
 			$ow = $imgObj->width();
 			$oh = $imgObj->height();
 			if (!$opt['width'])
