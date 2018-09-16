@@ -10,8 +10,8 @@
  *	Copyright (c) 2018 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.0.0
- *	@date: 09.05.2018
+ *	@version: 1.0.1
+ *	@date: 16.09.2018
  *	@since: 05.11.2015
  *
  **/
@@ -25,6 +25,7 @@ class Image extends \Template\TagHandler {
 		'file_type' => 'jpeg', // png, jpeg, gif, wbmp
 		'default_quality' => 75,
 		'not_found_fallback' => NULL,
+		'not_found_callback' => NULL,
 	];
 
 	/**
@@ -93,8 +94,7 @@ class Image extends \Template\TagHandler {
 	 * @return string
 	 */
 	function resize($path,$opt) {
-		$f3 = \Base::instance();
-		$hash = $f3->hash($path.$f3->serialize($opt));
+		$hash = $this->f3->hash($path.$this->f3->serialize($opt));
 		$ext = $this->options['file_type'];
 		if ($ext=='jpeg')
 			$ext='jpg';
@@ -106,12 +106,16 @@ class Image extends \Template\TagHandler {
 			$path = explode('/', $path);
 			$file = array_pop($path);
 			$src_path = implode('/',$path).'/';
-			if (file_exists($src_path.$file))
+			if (file_exists($src_path.$file)) {
 				$imgObj = new \Image($file, false, $src_path);
-			elseif ($this->options['not_found_fallback'])
-				$imgObj = new \Image($this->options['not_found_fallback'], false);
-			else
-				return 'http://placehold.it/250x250?text=Not+Found';
+			} else {
+				if ($this->options['not_found_callback'])
+					$this->f3->call($this->options['not_found_callback'],array($src_path.$file));
+				if ($this->options['not_found_fallback'])
+					$imgObj = new \Image($this->options['not_found_fallback'], false);
+				else
+					return 'http://placehold.it/250x250?text=Not+Found';
+			}
 			if (!is_dir($dst_path))
 				mkdir($dst_path,0775,true);
 			$ow = $imgObj->width();
@@ -124,7 +128,7 @@ class Image extends \Template\TagHandler {
 				$opt['quality']=max(0,round(((int)$opt['quality'])/10)-1);
 			$imgObj->resize((int)$opt['width'], (int)$opt['height'], $opt['crop'], $opt['enlarge']);
 			$file_data = $imgObj->dump($this->options['file_type'], $opt['quality']);
-			$f3->write($dst_path.$new_file_name, $file_data);
+			$this->f3->write($dst_path.$new_file_name, $file_data);
 		}
 		return $dst_path.$new_file_name;
 	}

@@ -1,6 +1,8 @@
 # Template directives
 Collection of different template directives for the [PHP Fat-Free Framework](https://github.com/bcosca/fatfree).
 
+This package gives you a base to write your own template tag handler (directive) easily. Therefore extend the `\Template\TagHandler` class and implement its `build` method. 
+You can also have a look at the included, ready-to-use directives:
 
 ### form
 
@@ -35,6 +37,7 @@ $f3->copy('POST','FORM.contact');
 \Template\Tags\Form::instance()->setDynamicSrcKey(true);
 ```
 
+For more tests, see: http://f3.ikkez.de/formtest
 
 ### markdown
 
@@ -78,6 +81,7 @@ Options:
 *  `file_type`, default file type for dumped images, `png`, `jpeg`, `gif` or `wbmp`
 *  `default_quality`, image quality, 0-100
 *  `not_found_fallback`, fallback path for missing images
+*  `not_found_callback`, define a callable function here that is executed when the image path was not found. The function receives the `$filePath` as first parameter.
 
 Usage:
 
