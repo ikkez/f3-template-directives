@@ -7,10 +7,10 @@
  *	compliance with the license. Any of the license terms and conditions
  *	can be waived if you get permission from the copyright holder.
  *
- *	Copyright (c) 2018 ~ ikkez
+ *	Copyright (c) 2019 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.0.1
+ *	@version: 1.0.2
  *	@date: 16.09.2018
  *	@since: 05.11.2015
  *
@@ -24,6 +24,7 @@ class Image extends \Template\TagHandler {
 		'temp_dir' => 'img/',
 		'file_type' => 'jpeg', // png, jpeg, gif, wbmp
 		'default_quality' => 75,
+		'check_UI_path' => false,
 		'not_found_fallback' => NULL,
 		'not_found_callback' => NULL,
 	];
@@ -106,7 +107,17 @@ class Image extends \Template\TagHandler {
 			$path = explode('/', $path);
 			$file = array_pop($path);
 			$src_path = implode('/',$path).'/';
-			if (file_exists($src_path.$file)) {
+			$found=false;
+			if ($this->options['check_UI_path']) {
+				foreach ($this->f3->split($this->f3->UI,FALSE) as $dir)
+					if (is_file($dir.$src_path.$file)) {
+						$src_path=$dir.$src_path;
+						$found=true;
+						break;
+					}
+			} elseif (file_exists($src_path.$file))
+				$found=true;
+			if ($found) {
 				$imgObj = new \Image($file, false, $src_path);
 			} else {
 				if ($this->options['not_found_callback'])
