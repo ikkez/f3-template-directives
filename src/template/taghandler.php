@@ -128,7 +128,7 @@ abstract class TagHandler extends \Prefab {
 	 * @return string
 	 */
 	protected function tokenExport($val) {
-		if(empty($val))
+		if (empty($val) && $val !== "0")
 			return '\'\'';
 		$split = preg_split('/({{.+?}})/s', $val, -1,
 			PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
