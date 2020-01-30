@@ -88,9 +88,17 @@ To enable all form tag handlers just call:
 
                 <div class="form-group">
                     <label>simple input field</label>
-                    <input type="text" name="input1" class="form-control" placeholder="Tell me something" />
+                    <input type="text" name="input" class="form-control" placeholder="Tell me something" />
                     markup:
                     <pre class="language-markup"><code>&lt;input type="text" name="input1" /&gt;</code></pre>
+                </div>
+
+                <div class="form-group">
+                    <label>input arrays field</label>
+                    <input type="text" name="input_ar[]" class="form-control" placeholder="Tell me something" />
+                    <input type="text" name="input_ar[]" class="form-control" placeholder="Tell me something" />
+                    markup:
+                    <pre class="language-markup"><code>&lt;input type="text" name="input_ar[]" /&gt;</code></pre>
                 </div>
 
                 <div class="form-group">
