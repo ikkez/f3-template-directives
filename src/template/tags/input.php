@@ -7,11 +7,11 @@
  *	compliance with the license. Any of the license terms and conditions
  *	can be waived if you get permission from the copyright holder.
  *
- *	Copyright (c) 2018 ~ ikkez
+ *	Copyright (c) 2020 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.0.0
- *	@date: 09.05.2018
+ *	@version: 1.1.0
+ *	@date: 30.01.2020
  *	@since: 07.08.2015
  *
  **/
@@ -54,7 +54,13 @@ class Input extends \Template\TagHandler {
 
 			} elseif($attr['type'] != 'password' && !array_key_exists('value',$attr)) {
 				// all other types, except password fields
-				$attr['value'] = $this->tmpl->build('{{ isset(@'.$srcKey.$name.')?@'.$srcKey.$name.':\'\'}}');
+				if (preg_match('/\[\]$/s', $name)) {
+					$name=substr($name,0,-2);
+					$kh='__'.$this->f3->hash($name);
+					$cond = '(isset(@'.$srcKey.$name.') && is_array(@'.$srcKey.$name.'))?@'.$srcKey.$name.'[(!isset(@'.$kh.')?(@'.$kh.'=0):++@'.$kh.')]:\'\'';
+				} else
+					$cond = 'isset(@'.$srcKey.$name.')?@'.$srcKey.$name.':\'\'';
+				$attr['value'] = $this->tmpl->build('{{'.$cond.'}}');
 			}
 		}
 		// resolve all other / unhandled tag attributes
