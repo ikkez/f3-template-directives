@@ -10,8 +10,8 @@
  *	Copyright (c) 2020 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.0.2
- *	@date: 29.01.2020
+ *	@version: 1.1.1
+ *	@date: 30.04.2020
  *	@since: 14.07.2015
  *
  **/
@@ -35,19 +35,27 @@ abstract class TagHandler extends \Prefab {
 	}
 
 	/**
+	 * set template engine
+	 * @param $tmpl
+	 */
+	function setTemplateEngine($tmpl) {
+		$this->tmpl = $tmpl;
+	}
+
+	/**
 	 * register tag handler to template engine
 	 * @param $name
 	 * @param \Template|NULL $tmpl
-	 * @param array $args
+	 * @param array $opt options array
 	 */
-	static public function init($name,\Template $tmpl=NULL,$args=[]) {
+	static public function init($name, \Template $tmpl=NULL, $opt=[]) {
 		if (!$tmpl)
 			$tmpl = \Template::instance();
-		if (!empty($args) && is_array($args))
-			$obj = static::instance($args);
+		if (!empty($opt) && is_array($opt))
+			$obj = new static($opt);
 		else
-			$obj = static::instance();
-		$obj->tmpl = $tmpl;
+			$obj = new static();
+		$obj->setTemplateEngine($tmpl);
 		$tmpl->extend($name,[$obj,'process']);
 	}
 
