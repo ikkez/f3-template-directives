@@ -7,11 +7,11 @@
  *	compliance with the license. Any of the license terms and conditions
  *	can be waived if you get permission from the copyright holder.
  *
- *	Copyright (c) 2018 ~ ikkez
+ *	Copyright (c) 2020 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.0.0
- *	@date: 09.05.2018
+ *	@version: 1.2.0
+ *	@date: 30.04.2020
  *
  **/
 
@@ -47,22 +47,29 @@ class Select extends \Template\TagHandler {
 	 */
 	function build($attr, $content) {
 		$srcKey = Form::instance()->getSrcKey();
+
 		if (array_key_exists("name", $attr))
 			$name = $this->attrExport($attr['name']);
+
 		if (array_key_exists('group', $attr)) {
 			$attr['group'] = $this->tmpl->token($attr['group']);
+
+			// when value is an array, use different key
+			$key = array_key_exists("key", $attr) ? '@val[\''.$attr['key'].'\']' : '@key';
+			$label = array_key_exists("label", $attr) ? '@val[\''.$attr['label'].'\']' : '@val';
+
 			if (preg_match('/\[\]$/s', $name)) {
 				$name=substr($name,0,-2);
 				$cond = '(isset(@'.$srcKey.$name.') && is_array(@'.$srcKey.$name.')'.
-					' && in_array(@key,@'.$srcKey.$name.'))';
+					' && in_array('.$key.',@'.$srcKey.$name.'))';
 			} else
-				$cond = '(isset(@'.$srcKey.$name.') && @'.$srcKey.$name.'==@key)';
+				$cond = '(isset(@'.$srcKey.$name.') && @'.$srcKey.$name.'=='.$key.')';
 
 			$content .= '<?php foreach('.$attr['group'].' as $key => $val) {?>'.
-				$this->tmpl->build('<option value="{{@key}}"'.
-						'{{'.$cond.'?'.
-						'\' selected="selected"\':\'\'}}>{{@val}}</option>').
-						'<?php } ?>';
+				$this->tmpl->build('<option value="{{'.$key.'}}"'.
+					'{{'.$cond.'?'.
+					'\' selected="selected"\':\'\'}}>{{'.$label.'|esc}}</option>').
+				'<?php } ?>';
 			unset($attr['group']);
 		}
 
