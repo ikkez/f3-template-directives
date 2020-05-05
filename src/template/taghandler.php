@@ -10,7 +10,7 @@
  *	Copyright (c) 2020 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.1.1
+ *	@version: 1.2.0
  *	@date: 30.04.2020
  *	@since: 14.07.2015
  *
@@ -25,6 +25,9 @@ abstract class TagHandler extends \Prefab {
 
 	/** @var \Base */
 	protected $f3;
+
+	/** @var string */
+	protected $tag_name;
 
 	/**
 	 * TagHandler constructor.
@@ -43,6 +46,14 @@ abstract class TagHandler extends \Prefab {
 	}
 
 	/**
+	 * set tag name
+	 * @param $tmpl
+	 */
+	protected function setTagName($tag) {
+		$this->tag_name = $tag;
+	}
+
+	/**
 	 * register tag handler to template engine
 	 * @param $name
 	 * @param \Template|NULL $tmpl
@@ -51,12 +62,32 @@ abstract class TagHandler extends \Prefab {
 	static public function init($name, \Template $tmpl=NULL, $opt=[]) {
 		if (!$tmpl)
 			$tmpl = \Template::instance();
+		$class = get_called_class();
 		if (!empty($opt) && is_array($opt))
 			$obj = new static($opt);
 		else
 			$obj = new static();
 		$obj->setTemplateEngine($tmpl);
+		$obj->setTagName($name);
+		\Registry::set('tag_'.$name, $obj);
 		$tmpl->extend($name,[$obj,'process']);
+	}
+
+	/**
+	 * return string representation of current tag instance
+	 * @return string
+	 */
+	function getTagReferenceString() {
+		return '\Registry::get(\'tag_'.$this->tag_name.'\')';
+	}
+
+	/**
+	 * return registered tag handler instance
+	 * @param $tag
+	 * @return object
+	 */
+	static function getTagReference($tag) {
+		return \Registry::get('tag_'.$tag);
 	}
 
 	/**

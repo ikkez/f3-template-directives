@@ -7,11 +7,11 @@
  *	compliance with the license. Any of the license terms and conditions
  *	can be waived if you get permission from the copyright holder.
  *
- *	Copyright (c) 2019 ~ ikkez
+ *	Copyright (c) 2020 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.0.2
- *	@date: 16.09.2018
+ *	@version: 1.1.0
+ *	@date: 05.05.2020
  *	@since: 05.11.2015
  *
  **/
@@ -63,13 +63,13 @@ class Image extends \Template\TagHandler {
 	function build($attr, $content) {
 
 		if (isset($attr['src']) && (isset($attr['width'])||isset($attr['height']))) {
-			$opt = array(
+			$opt = [
 				'width'=>null,
 				'height'=>null,
 				'crop'=>false,
 				'enlarge'=>false,
 				'quality'=>$this->options['default_quality'],
-			);
+			];
 			// merge into defaults
 			$opt = array_intersect_key($attr + $opt, $opt);
 			// get dynamic path
@@ -79,7 +79,7 @@ class Image extends \Template\TagHandler {
 			$attr=array_diff_key($attr,$opt);
 			$opt = var_export($opt,true);
 			unset($attr['src']);
-			$out='<img src="<?php echo \Template\Tags\Image::instance()->resize('.
+			$out='<img src="<?php echo '.$this->getTagReferenceString().'->resize('.
 				$path.','.$opt.');?>"'.$this->resolveParams($attr).' />';
 		} else
 			// just forward / bypass further processing
