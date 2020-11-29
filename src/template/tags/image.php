@@ -10,8 +10,8 @@
  *	Copyright (c) 2020 ~ ikkez
  *	Christian Knuth <ikkez0n3@gmail.com>
  *
- *	@version: 1.1.0
- *	@date: 05.05.2020
+ *	@version: 1.2.0
+ *	@date: 29.11.2020
  *	@since: 05.11.2015
  *
  **/
@@ -22,6 +22,7 @@ class Image extends \Template\TagHandler {
 
 	protected $options = [
 		'temp_dir' => 'img/',
+		'public_path' => null,
 		'file_type' => 'jpeg', // png, jpeg, gif, wbmp
 		'default_quality' => 75,
 		'check_UI_path' => false,
@@ -141,6 +142,6 @@ class Image extends \Template\TagHandler {
 			$file_data = $imgObj->dump($this->options['file_type'], $opt['quality']);
 			$this->f3->write($dst_path.$new_file_name, $file_data);
 		}
-		return $dst_path.$new_file_name;
+		return ($this->options['public_path']?:$dst_path).$new_file_name;
 	}
 }
