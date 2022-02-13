@@ -143,9 +143,9 @@ abstract class TagHandler extends \Prefab {
 		$out = '';
 		foreach ($params as $key => $value) {
 			// build dynamic tokens
-			if (preg_match('/{{(.+?)}}/s', $value))
+			if (preg_match('/{{(.+?)}}/s', $value?:''))
 				$value = $this->tmpl->build($value);
-			if (preg_match('/{{(.+?)}}/s', $key))
+			if (preg_match('/{{(.+?)}}/s', $key?:''))
 				$key = $this->tmpl->build($key);
 			// inline token
 			if (is_numeric($key))
@@ -212,4 +212,4 @@ abstract class TagHandler extends \Prefab {
 		}
 		return $val;
 	}
-} 
+}
