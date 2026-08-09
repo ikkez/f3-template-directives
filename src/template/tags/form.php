@@ -25,7 +25,7 @@ class Form extends \Template\TagHandler {
 
 	protected $form_name;
 
-	static public function initAll(\Template $tmpl=NULL) {
+	static public function initAll(?\Template $tmpl=NULL) {
 		if (!$tmpl)
 			$tmpl = \Template::instance();
 		static::init('form',$tmpl);

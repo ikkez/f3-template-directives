@@ -59,7 +59,7 @@ abstract class TagHandler extends \Prefab {
 	 * @param \Template|NULL $tmpl
 	 * @param array $opt options array
 	 */
-	static public function init($name, \Template $tmpl=NULL, $opt=[]) {
+	static public function init($name, ?\Template $tmpl=NULL, array $opt=[]) {
 		if (!$tmpl)
 			$tmpl = \Template::instance();
 		$class = get_called_class();
